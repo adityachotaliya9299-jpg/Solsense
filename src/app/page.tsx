@@ -4,7 +4,10 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useEffect, useState } from 'react';
 import { getWalletPortfolio, getTopTokens, getWalletTransactions } from '@/lib/birdeye';
-import { Wallet, TrendingUp, Activity, RefreshCw, ExternalLink, Zap, Shield, BarChart3 } from 'lucide-react';
+import { Wallet, TrendingUp, Activity, RefreshCw, ExternalLink, Zap, Shield, BarChart3, Bell } from 'lucide-react';
+import PriceChart from '@/components/PriceChart';
+import WhaleTracker from '@/components/WhaleTracker';
+import PriceAlerts from '@/components/PriceAlerts';
 
 interface Token {
   address: string;
@@ -41,7 +44,8 @@ export default function Home() {
   const [totalValue, setTotalValue] = useState(0);
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState<'portfolio' | 'market' | 'activity'>('portfolio');
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'market' | 'activity' | 'whales' | 'alerts'>('portfolio');
+  const [selectedToken, setSelectedToken] = useState<Token | null>(null);
 
   useEffect(() => { setMounted(true); }, []);
   useEffect(() => { fetchTopTokens(); }, []);
@@ -85,17 +89,23 @@ export default function Home() {
 
   if (!mounted) return null;
 
+  const tabs = [
+    { id: 'portfolio', label: 'Portfolio', icon: <Wallet size={13} /> },
+    { id: 'market', label: 'Market', icon: <TrendingUp size={13} /> },
+    { id: 'activity', label: 'Activity', icon: <Activity size={13} /> },
+    { id: 'whales', label: '🐋 Whales', icon: null },
+    { id: 'alerts', label: '🔔 Alerts', icon: null },
+  ] as const;
+
   return (
     <main className="min-h-screen text-white" style={{ background: 'linear-gradient(135deg, #0a0a0f 0%, #0d0a1a 50%, #0a0f1a 100%)' }}>
 
-      {/* Animated background orbs */}
+      {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-96 h-96 rounded-full opacity-20"
           style={{ background: 'radial-gradient(circle, #7c3aed, transparent)', filter: 'blur(80px)' }} />
         <div className="absolute bottom-[-10%] right-[-5%] w-80 h-80 rounded-full opacity-15"
           style={{ background: 'radial-gradient(circle, #2563eb, transparent)', filter: 'blur(80px)' }} />
-        <div className="absolute top-[40%] right-[20%] w-64 h-64 rounded-full opacity-10"
-          style={{ background: 'radial-gradient(circle, #06b6d4, transparent)', filter: 'blur(60px)' }} />
       </div>
 
       {/* Navbar */}
@@ -121,18 +131,13 @@ export default function Home() {
           )}
           <WalletMultiButton style={{
             background: 'linear-gradient(135deg, #7c3aed, #2563eb)',
-            borderRadius: '12px',
-            fontSize: '13px',
-            padding: '8px 20px',
-            height: 'auto',
+            borderRadius: '12px', fontSize: '13px', padding: '8px 20px', height: 'auto',
           }} />
         </div>
       </nav>
 
       {!connected ? (
-        /* ── LANDING PAGE ── */
         <div className="relative z-10 max-w-6xl mx-auto px-8 py-20">
-          {/* Hero */}
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs mb-8"
               style={{ background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)' }}>
@@ -153,52 +158,48 @@ export default function Home() {
             </p>
             <WalletMultiButton style={{
               background: 'linear-gradient(135deg, #7c3aed, #2563eb)',
-              borderRadius: '14px',
-              fontSize: '16px',
-              padding: '14px 36px',
-              height: 'auto',
+              borderRadius: '14px', fontSize: '16px', padding: '14px 36px', height: 'auto',
               boxShadow: '0 0 40px rgba(124,58,237,0.4)',
             }} />
           </div>
 
-          {/* Feature Cards */}
-          <div className="grid grid-cols-3 gap-5 mb-16">
+          <div className="grid grid-cols-4 gap-5 mb-10">
             {[
-              { icon: <BarChart3 size={24} />, color: '#7c3aed', title: 'Portfolio Intelligence', desc: 'Real-time token balances, USD values and 24h PnL for every asset in your wallet.' },
-              { icon: <TrendingUp size={24} />, color: '#0891b2', title: 'Market Signals', desc: 'Live top movers by volume, price changes and anomaly detection powered by Birdeye.' },
-              { icon: <Activity size={24} />, color: '#059669', title: 'Transaction Timeline', desc: 'Full activity history with status, timestamps and direct Solscan links.' },
+              { icon: <BarChart3 size={22} />, color: '#7c3aed', title: 'Portfolio Analytics', desc: 'Real-time token values & 24h PnL' },
+              { icon: <TrendingUp size={22} />, color: '#0891b2', title: 'Market Intelligence', desc: 'Top movers, gainers & losers' },
+              { icon: '🐋', color: '#f59e0b', title: 'Whale Tracker', desc: 'Live large transaction monitoring' },
+              { icon: <Bell size={22} />, color: '#059669', title: 'Price Alerts', desc: 'Browser notifications for targets' },
             ].map((f) => (
-              <div key={f.title} className="rounded-2xl p-6 backdrop-blur-sm"
+              <div key={f.title} className="rounded-2xl p-5 backdrop-blur-sm"
                 style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 text-lg"
                   style={{ background: `${f.color}22`, color: f.color }}>
                   {f.icon}
                 </div>
-                <h3 className="font-bold text-lg mb-2">{f.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+                <h3 className="font-bold text-sm mb-1">{f.title}</h3>
+                <p className="text-gray-400 text-xs leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
 
-          {/* Live Market Preview */}
           <div className="rounded-2xl p-6 backdrop-blur-sm"
             style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
             <div className="flex items-center gap-2 mb-5">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-sm font-semibold text-gray-300">Live Market — Top Solana Tokens</span>
+              <span className="text-sm font-semibold text-gray-300">Live Market Preview</span>
             </div>
-            <div className="grid grid-cols-4 gap-3">
-              {topTokens.slice(0, 8).map((token) => (
+            <div className="grid grid-cols-5 gap-3">
+              {topTokens.slice(0, 10).map((token) => (
                 <div key={token.address} className="rounded-xl p-3"
                   style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <div className="flex items-center gap-2 mb-2">
                     {token.logoURI
                       ? <img src={token.logoURI} className="w-6 h-6 rounded-full" alt={token.symbol} />
-                      : <div className="w-6 h-6 rounded-full bg-purple-800 flex items-center justify-center text-xs">{token.symbol?.slice(0,2)}</div>
+                      : <div className="w-6 h-6 rounded-full bg-purple-800 flex items-center justify-center text-xs">{token.symbol?.slice(0, 2)}</div>
                     }
-                    <span className="text-sm font-semibold">{token.symbol}</span>
+                    <span className="text-xs font-semibold">{token.symbol}</span>
                   </div>
-                  <div className="text-sm font-bold">${token.price < 0.01 ? token.price.toFixed(6) : token.price.toFixed(3)}</div>
+                  <div className="text-sm font-bold">${token.price < 0.01 ? token.price.toFixed(5) : token.price.toFixed(3)}</div>
                   <div className={`text-xs mt-0.5 font-medium ${(token.v24hChangePercent || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                     {(token.v24hChangePercent || 0) >= 0 ? '▲' : '▼'} {Math.abs(token.v24hChangePercent || 0).toFixed(1)}%
                   </div>
@@ -208,15 +209,13 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        /* ── DASHBOARD ── */
         <div className="relative z-10 max-w-7xl mx-auto px-8 py-8">
-
-          {/* Stats Row */}
+          {/* Stats */}
           <div className="grid grid-cols-4 gap-4 mb-6">
             {[
               { label: 'Portfolio Value', value: formatUSD(totalValue), sub: 'Total USD', color: '#a78bfa' },
               { label: 'Tokens Held', value: portfolio.length.toString(), sub: 'Unique assets', color: '#38bdf8' },
-              { label: 'Wallet', value: publicKey?.toString().slice(0,8) + '...', sub: 'Connected via Solflare', color: '#34d399' },
+              { label: 'Wallet', value: publicKey?.toString().slice(0, 8) + '...', sub: 'Via Solflare', color: '#34d399' },
               { label: 'Network', value: 'Mainnet', sub: 'Solana • Live', color: '#fb923c' },
             ].map((s) => (
               <div key={s.label} className="rounded-2xl p-5 backdrop-blur-sm"
@@ -228,17 +227,17 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Tab Nav */}
+          {/* Tabs */}
           <div className="flex gap-1 mb-6 p-1 rounded-xl w-fit"
             style={{ background: 'rgba(255,255,255,0.05)' }}>
-            {(['portfolio', 'market', 'activity'] as const).map((tab) => (
-              <button key={tab} onClick={() => setActiveTab(tab)}
-                className="px-5 py-2 rounded-lg text-sm font-medium capitalize transition-all"
+            {tabs.map((tab) => (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all"
                 style={{
-                  background: activeTab === tab ? 'linear-gradient(135deg, #7c3aed, #2563eb)' : 'transparent',
-                  color: activeTab === tab ? 'white' : '#6b7280',
+                  background: activeTab === tab.id ? 'linear-gradient(135deg, #7c3aed, #2563eb)' : 'transparent',
+                  color: activeTab === tab.id ? 'white' : '#6b7280',
                 }}>
-                {tab}
+                {tab.icon}{tab.label}
               </button>
             ))}
           </div>
@@ -253,7 +252,7 @@ export default function Home() {
                   <Wallet size={16} className="text-purple-400" /> Your Portfolio
                 </h2>
                 <button onClick={fetchPortfolio}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-white transition-colors"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-white"
                   style={{ background: 'rgba(255,255,255,0.06)' }}>
                   <RefreshCw size={12} /> Refresh
                 </button>
@@ -262,55 +261,53 @@ export default function Home() {
                 <div className="flex items-center justify-center py-16">
                   <div className="text-center">
                     <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-                    <p className="text-gray-400 text-sm">Fetching portfolio from Birdeye...</p>
+                    <p className="text-gray-400 text-sm">Fetching from Birdeye...</p>
                   </div>
                 </div>
               ) : portfolio.length === 0 ? (
                 <div className="text-center py-16 text-gray-500">
                   <Wallet size={40} className="mx-auto mb-3 opacity-30" />
-                  <p>No tokens with value found in this wallet</p>
+                  <p>No tokens with value found</p>
                 </div>
               ) : (
                 <>
-                  <div className="grid grid-cols-4 gap-px p-0" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                    {['Token', 'Balance', 'Price', 'Value'].map((h) => (
-                      <div key={h} className="px-5 py-3 text-xs text-gray-500 font-medium"
-                        style={{ background: 'rgba(10,10,20,0.8)' }}>{h}</div>
+                  <div className="grid grid-cols-5 p-0">
+                    {['Token', 'Balance', 'Price', '24h', 'Value'].map((h) => (
+                      <div key={h} className="px-5 py-3 text-xs text-gray-500 font-medium border-b"
+                        style={{ borderColor: 'rgba(255,255,255,0.07)', background: 'rgba(255,255,255,0.02)' }}>{h}</div>
                     ))}
                   </div>
                   {portfolio.map((token, i) => (
                     <div key={token.address}
-                      className="grid grid-cols-4 gap-px hover:bg-white/5 transition-colors"
-                      style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
+                      className="grid grid-cols-5 hover:bg-white/5 transition-colors cursor-pointer"
+                      style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}
+                      onClick={() => setSelectedToken(token)}>
                       <div className="flex items-center gap-3 px-5 py-4">
                         {token.logoURI
                           ? <img src={token.logoURI} className="w-8 h-8 rounded-full" alt={token.symbol} />
                           : <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
                               style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}>
-                              {token.symbol?.slice(0,2)}
+                              {token.symbol?.slice(0, 2)}
                             </div>
                         }
                         <div>
                           <div className="font-semibold text-sm">{token.symbol}</div>
-                          <div className="text-xs text-gray-500 truncate max-w-24">{token.name}</div>
+                          <div className="text-xs text-gray-500 truncate max-w-20">{token.name}</div>
                         </div>
                       </div>
-                      <div className="flex items-center px-5 py-4 text-sm text-gray-300">
-                        {token.balance?.toFixed(4)}
+                      <div className="flex items-center px-5 py-4 text-sm text-gray-300">{token.balance?.toFixed(4)}</div>
+                      <div className="flex items-center px-5 py-4 text-sm">
+                        ${token.priceUsd < 0.01 ? token.priceUsd?.toFixed(6) : token.priceUsd?.toFixed(4)}
                       </div>
-                      <div className="flex items-center px-5 py-4">
-                        <div>
-                          <div className="text-sm">${token.priceUsd < 0.01 ? token.priceUsd?.toFixed(6) : token.priceUsd?.toFixed(4)}</div>
-                          <div className={`text-xs font-medium ${(token.priceChange24h || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            {(token.priceChange24h || 0) >= 0 ? '▲' : '▼'} {Math.abs(token.priceChange24h || 0).toFixed(2)}%
-                          </div>
-                        </div>
+                      <div className={`flex items-center px-5 py-4 text-sm font-medium ${(token.priceChange24h || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        {(token.priceChange24h || 0) >= 0 ? '▲' : '▼'} {Math.abs(token.priceChange24h || 0).toFixed(2)}%
                       </div>
-                      <div className="flex items-center px-5 py-4 font-semibold text-sm">
-                        {formatUSD(token.valueUsd)}
-                      </div>
+                      <div className="flex items-center px-5 py-4 font-semibold text-sm">{formatUSD(token.valueUsd)}</div>
                     </div>
                   ))}
+                  <div className="p-4 text-center text-xs text-gray-500">
+                    💡 Click any token to view its price chart
+                  </div>
                 </>
               )}
             </div>
@@ -334,7 +331,7 @@ export default function Home() {
                         <span className="text-xs text-gray-600 w-4">{i + 1}</span>
                         {token.logoURI
                           ? <img src={token.logoURI} className="w-8 h-8 rounded-full" alt={token.symbol} />
-                          : <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-xs">{token.symbol?.slice(0,2)}</div>
+                          : <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-xs">{token.symbol?.slice(0, 2)}</div>
                         }
                         <div>
                           <div className="font-semibold text-sm">{token.symbol}</div>
@@ -342,7 +339,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-medium">${token.price < 0.01 ? token.price.toFixed(6) : token.price.toFixed(3)}</div>
+                        <div className="text-sm font-medium">${token.price < 0.01 ? token.price.toFixed(5) : token.price.toFixed(3)}</div>
                         <div className={`text-xs font-bold ${(token.v24hChangePercent || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                           {(token.v24hChangePercent || 0) >= 0 ? '+' : ''}{(token.v24hChangePercent || 0).toFixed(1)}%
                         </div>
@@ -351,13 +348,11 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-
-              {/* Gainers vs Losers */}
               <div className="space-y-5">
                 <div className="rounded-2xl backdrop-blur-sm"
                   style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
                   <div className="p-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
-                    <h2 className="font-bold text-green-400 flex items-center gap-2">🚀 Top Gainers</h2>
+                    <h2 className="font-bold text-green-400">🚀 Top Gainers</h2>
                   </div>
                   <div className="p-3 space-y-1">
                     {[...topTokens].sort((a, b) => (b.v24hChangePercent || 0) - (a.v24hChangePercent || 0)).slice(0, 5).map((token) => (
@@ -374,7 +369,7 @@ export default function Home() {
                 <div className="rounded-2xl backdrop-blur-sm"
                   style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
                   <div className="p-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
-                    <h2 className="font-bold text-red-400 flex items-center gap-2">📉 Top Losers</h2>
+                    <h2 className="font-bold text-red-400">📉 Top Losers</h2>
                   </div>
                   <div className="p-3 space-y-1">
                     {[...topTokens].sort((a, b) => (a.v24hChangePercent || 0) - (b.v24hChangePercent || 0)).slice(0, 5).map((token) => (
@@ -409,11 +404,11 @@ export default function Home() {
               ) : (
                 <div className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
                   {transactions.map((tx) => (
-                    <div key={tx.txHash} className="flex items-center justify-between px-5 py-4 hover:bg-white/5 transition-colors">
+                    <div key={tx.txHash} className="flex items-center justify-between px-5 py-4 hover:bg-white/5">
                       <div className="flex items-center gap-3">
                         <div className={`w-2.5 h-2.5 rounded-full ${tx.status === 'Success' ? 'bg-green-400' : 'bg-red-400'}`} />
                         <div>
-                          <div className="font-mono text-sm">{tx.txHash?.slice(0, 24)}...</div>
+                          <div className="font-mono text-sm">{tx.txHash?.slice(0, 28)}...</div>
                           <div className="text-xs text-gray-500 mt-0.5">{formatDate(tx.blockTime)}</div>
                         </div>
                       </div>
@@ -432,7 +427,18 @@ export default function Home() {
               )}
             </div>
           )}
+
+          {/* Whales Tab */}
+          {activeTab === 'whales' && <WhaleTracker />}
+
+          {/* Alerts Tab */}
+          {activeTab === 'alerts' && <PriceAlerts />}
         </div>
+      )}
+
+      {/* Price Chart Modal */}
+      {selectedToken && (
+        <PriceChart token={selectedToken} onClose={() => setSelectedToken(null)} />
       )}
     </main>
   );
