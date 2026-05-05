@@ -25,27 +25,33 @@ export default function WhaleTracker() {
   }, []);
 
   async function fetchWhales() {
-  setLoading(true);
-  try {
-    const data = await getWhaleTransactions();
-    console.log('Whale data:', data); // check browser console
-    if (data?.data?.items) {
-      setTxs(data.data.items.slice(0, 10));
-      setLastUpdated(new Date());
+    setLoading(true);
+    try {
+      const data = await getWhaleTransactions();
+      if (data?.data?.items) {
+        const items = data.data.items.map((tx: WhaleTx, i: number) => ({
+          ...tx,
+          _uniqueKey: `${tx.txHash || 'tx'}-${i}-${Date.now()}`,
+        }));
+        setTxs(items);
+        setLastUpdated(new Date());
+      }
+    } catch (e) {
+      console.error(e);
     }
-  } catch (e) {
-    console.error(e);
+    setLoading(false);
   }
-  setLoading(false);
-}
 
-  const formatUSD = (val: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
+  const formatUSD = (val: number) => {
+    if (!val || isNaN(val)) return 'N/A';
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
+  };
 
   const formatTime = (ts: number) =>
     new Date(ts * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
   const getSize = (vol: number) => {
+    if (!vol || isNaN(vol)) return { label: 'TX', color: '#6b7280' };
     if (vol > 1000000) return { label: 'MEGA', color: '#f59e0b' };
     if (vol > 100000) return { label: 'LARGE', color: '#a78bfa' };
     return { label: 'MID', color: '#38bdf8' };
@@ -87,15 +93,14 @@ export default function WhaleTracker() {
       ) : txs.length === 0 ? (
         <div className="text-center py-12 text-gray-500">
           <p className="text-4xl mb-3">🐋</p>
-          <p>No large transactions found right now</p>
-         <p className="text-xs mt-1">Threshold: All transactions</p>
+          <p>No transactions found right now</p>
         </div>
       ) : (
         <div className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-          {txs.slice(0, 10).map((tx, index) => {
+          {txs.slice(0, 10).map((tx: WhaleTx & { _uniqueKey?: string }, index) => {
             const size = getSize(tx.volumeUSD);
             return (
-              <div key={tx.txHash || index}
+              <div key={tx._uniqueKey || index}
                 className="flex items-center justify-between px-5 py-3 hover:bg-white/5 transition-colors">
                 <div className="flex items-center gap-3">
                   <span className="text-xs px-2 py-0.5 rounded-full font-bold"
@@ -113,9 +118,7 @@ export default function WhaleTracker() {
                   <span className={`text-sm font-bold ${tx.side === 'buy' ? 'text-green-400' : 'text-red-400'}`}>
                     {tx.side === 'buy' ? '▲ BUY' : '▼ SELL'}
                   </span>
-                  <span className="font-bold text-white">
-  {tx.volumeUSD && !isNaN(tx.volumeUSD) ? formatUSD(tx.volumeUSD) : 'N/A'}
-</span>
+                  <span className="font-bold text-white">{formatUSD(tx.volumeUSD)}</span>
                   <a href={`https://solscan.io/tx/${tx.txHash}`} target="_blank" rel="noopener noreferrer"
                     className="text-gray-500 hover:text-white transition-colors">
                     <ExternalLink size={13} />
