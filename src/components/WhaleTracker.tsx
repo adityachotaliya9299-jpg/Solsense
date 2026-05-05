@@ -29,7 +29,7 @@ export default function WhaleTracker() {
     const data = await getWhaleTransactions();
     if (data?.data?.items) {
       const large = data.data.items
-        .filter((tx: WhaleTx) => tx.volumeUSD > 10000)
+        .filter((tx: WhaleTx) => tx.volumeUSD > 0)
         .sort((a: WhaleTx, b: WhaleTx) => b.volumeUSD - a.volumeUSD);
       setTxs(large);
       setLastUpdated(new Date());
@@ -86,7 +86,7 @@ export default function WhaleTracker() {
         <div className="text-center py-12 text-gray-500">
           <p className="text-4xl mb-3">🐋</p>
           <p>No large transactions found right now</p>
-          <p className="text-xs mt-1">Threshold: $10,000+</p>
+         <p className="text-xs mt-1">Threshold: All transactions</p>
         </div>
       ) : (
         <div className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
