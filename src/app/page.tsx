@@ -57,10 +57,16 @@ export default function Home() {
     { address: 'jtojtomepa8berqQfDqoh8QY7KRM3bkdnUXkbgdNjt', symbol: 'JTO', name: 'Jito', logoURI: 'https://metadata.jito.network/token/jto/image', balance: 45, valueUsd: 135, priceUsd: 3.0, priceChange24h: -2.1 },
   ];
 
+  const DEMO_TRANSACTIONS = [
+  { txHash: '5KtPn1LGuxhFiwjxErkxTb4JTbJNDCXPQwBME6tTYNNN1111', blockTime: Math.floor(Date.now()/1000) - 300, status: 'Success' },
+  { txHash: '3mZGnRxmPaGq2222BBBd2JNaWenKbsZQh7XhBBBjNDCXP', blockTime: Math.floor(Date.now()/1000) - 900, status: 'Success' },
+  { txHash: '9xQwErTyUiOpAsDF3333GhJkLzXcVbNmQwErTyUiOpAs', blockTime: Math.floor(Date.now()/1000) - 1800, status: 'Failed' },
+];
+
   const [demoMode, setDemoMode] = useState(false);
   const displayPortfolio = demoMode ? DEMO_PORTFOLIO : portfolio;
   const displayTotal = demoMode ? DEMO_PORTFOLIO.reduce((s, t) => s + t.valueUsd, 0) : totalValue;
-
+const displayTransactions = demoMode ? DEMO_TRANSACTIONS : transactions;
 
   useEffect(() => { setMounted(true); }, []);
   useEffect(() => { fetchTopTokens(); }, []);
@@ -306,7 +312,7 @@ export default function Home() {
                     <p className="text-gray-400 text-sm">Fetching from Birdeye...</p>
                   </div>
                 </div>
-              ) : portfolio.length === 0 ? (
+              ) : displayPortfolio.length === 0 ? (
                 <div className="text-center py-16 text-gray-500">
                   <Wallet size={40} className="mx-auto mb-3 opacity-30" />
                   <p>No tokens with value found</p>
@@ -319,7 +325,7 @@ export default function Home() {
                         style={{ borderColor: 'rgba(255,255,255,0.07)', background: 'rgba(255,255,255,0.02)' }}>{h}</div>
                     ))}
                   </div>
-                  {portfolio.map((token, i) => (
+                  {displayPortfolio.map((token, i) => (
                     <div key={token.address}
                       className="grid grid-cols-5 hover:bg-white/5 transition-colors cursor-pointer"
                       style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}
@@ -438,14 +444,14 @@ export default function Home() {
                   <Activity size={16} className="text-blue-400" /> Recent Transactions
                 </h2>
               </div>
-              {transactions.length === 0 ? (
+              {displayTransactions.length === 0 ? (
                 <div className="text-center py-16 text-gray-500">
                   <Activity size={40} className="mx-auto mb-3 opacity-30" />
                   <p>No recent transactions found</p>
                 </div>
               ) : (
                 <div className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-                  {transactions.map((tx) => (
+                  {displayTransactions.map((tx) => (
                     <div key={tx.txHash} className="flex items-center justify-between px-5 py-4 hover:bg-white/5">
                       <div className="flex items-center gap-3">
                         <div className={`w-2.5 h-2.5 rounded-full ${tx.status === 'Success' ? 'bg-green-400' : 'bg-red-400'}`} />
