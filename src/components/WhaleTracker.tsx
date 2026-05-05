@@ -25,17 +25,19 @@ export default function WhaleTracker() {
   }, []);
 
   async function fetchWhales() {
-    setLoading(true);
+  setLoading(true);
+  try {
     const data = await getWhaleTransactions();
+    console.log('Whale data:', data); // check browser console
     if (data?.data?.items) {
-      const large = data.data.items
-        .filter((tx: WhaleTx) => tx.volumeUSD > 0)
-        .sort((a: WhaleTx, b: WhaleTx) => b.volumeUSD - a.volumeUSD);
-      setTxs(large);
+      setTxs(data.data.items.slice(0, 10));
       setLastUpdated(new Date());
     }
-    setLoading(false);
+  } catch (e) {
+    console.error(e);
   }
+  setLoading(false);
+}
 
   const formatUSD = (val: number) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);

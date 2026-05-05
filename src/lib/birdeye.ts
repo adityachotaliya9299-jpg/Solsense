@@ -41,7 +41,7 @@ export async function getTokenOverview(tokenAddress: string) {
 
 export async function getWhaleTransactions() {
   const res = await fetch(
-    `${BASE_URL}/defi/txs/token?address=So11111111111111111111111111111111111111112&offset=0&limit=20&tx_type=swap`,
+    `${BASE_URL}/defi/txs/token?address=So11111111111111111111111111111111111111112&offset=0&limit=50&tx_type=swap`,
     { headers }
   );
   return res.json();
