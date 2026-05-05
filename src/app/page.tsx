@@ -111,7 +111,7 @@ export default function Home() {
       </div>
 
       {/* Navbar */}
-      <nav className="relative z-10 border-b px-8 py-4 flex items-center justify-between backdrop-blur-md"
+      <nav className="relative z-10 border-b px-4 md:px-8 py-4 flex items-center justify-between backdrop-blur-md"
         style={{ borderColor: 'rgba(255,255,255,0.08)', background: 'rgba(10,10,20,0.7)' }}>
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center"
