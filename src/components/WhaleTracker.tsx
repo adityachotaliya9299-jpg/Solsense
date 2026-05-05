@@ -92,10 +92,10 @@ export default function WhaleTracker() {
         </div>
       ) : (
         <div className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-          {txs.slice(0, 10).map((tx) => {
+          {txs.slice(0, 10).map((tx, index) => {
             const size = getSize(tx.volumeUSD);
             return (
-              <div key={tx.txHash}
+              <div key={tx.txHash || index}
                 className="flex items-center justify-between px-5 py-3 hover:bg-white/5 transition-colors">
                 <div className="flex items-center gap-3">
                   <span className="text-xs px-2 py-0.5 rounded-full font-bold"
@@ -113,7 +113,9 @@ export default function WhaleTracker() {
                   <span className={`text-sm font-bold ${tx.side === 'buy' ? 'text-green-400' : 'text-red-400'}`}>
                     {tx.side === 'buy' ? '▲ BUY' : '▼ SELL'}
                   </span>
-                  <span className="font-bold text-white">{formatUSD(tx.volumeUSD)}</span>
+                  <span className="font-bold text-white">
+  {tx.volumeUSD && !isNaN(tx.volumeUSD) ? formatUSD(tx.volumeUSD) : 'N/A'}
+</span>
                   <a href={`https://solscan.io/tx/${tx.txHash}`} target="_blank" rel="noopener noreferrer"
                     className="text-gray-500 hover:text-white transition-colors">
                     <ExternalLink size={13} />
