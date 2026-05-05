@@ -9,6 +9,7 @@ import PriceChart from '@/components/PriceChart';
 import WhaleTracker from '@/components/WhaleTracker';
 import SwapWidget from '@/components/SwapWidget';
 import PriceAlerts from '@/components/PriceAlerts';
+import TokenSearch from '@/components/TokenSearch';
 
 interface Token {
   address: string;
@@ -45,8 +46,21 @@ export default function Home() {
   const [totalValue, setTotalValue] = useState(0);
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState<'portfolio' | 'market' | 'activity' | 'whales' | 'alerts' | 'swap'>('portfolio');
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'market' | 'activity' | 'whales' | 'alerts' | 'swap' | 'search'>('portfolio');
   const [selectedToken, setSelectedToken] = useState<Token | null>(null);
+
+
+  const DEMO_PORTFOLIO = [
+    { address: 'So11111111111111111111111111111111111111112', symbol: 'SOL', name: 'Solana', logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png', balance: 12.5, valueUsd: 1062.5, priceUsd: 85.0, priceChange24h: 7.2 },
+    { address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', symbol: 'USDC', name: 'USD Coin', logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png', balance: 500, valueUsd: 500, priceUsd: 1.0, priceChange24h: 0.1 },
+    { address: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', symbol: 'BONK', name: 'Bonk', logoURI: 'https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I', balance: 15000000, valueUsd: 225, priceUsd: 0.000015, priceChange24h: 12.4 },
+    { address: 'jtojtomepa8berqQfDqoh8QY7KRM3bkdnUXkbgdNjt', symbol: 'JTO', name: 'Jito', logoURI: 'https://metadata.jito.network/token/jto/image', balance: 45, valueUsd: 135, priceUsd: 3.0, priceChange24h: -2.1 },
+  ];
+
+  const [demoMode, setDemoMode] = useState(false);
+  const displayPortfolio = demoMode ? DEMO_PORTFOLIO : portfolio;
+  const displayTotal = demoMode ? DEMO_PORTFOLIO.reduce((s, t) => s + t.valueUsd, 0) : totalValue;
+
 
   useEffect(() => { setMounted(true); }, []);
   useEffect(() => { fetchTopTokens(); }, []);
@@ -96,6 +110,7 @@ export default function Home() {
     { id: 'activity', label: 'Activity', icon: <Activity size={13} /> },
     { id: 'whales', label: '🐋 Whales', icon: null },
     { id: 'alerts', label: '🔔 Alerts', icon: null },
+    { id: 'search', label: '🔍 Search', icon: null },
     { id: 'swap', label: '⚡ Swap', icon: null },
   ] as const;
 
@@ -215,8 +230,8 @@ export default function Home() {
           {/* Stats */}
           <div className="grid grid-cols-4 gap-4 mb-6">
             {[
-              { label: 'Portfolio Value', value: formatUSD(totalValue), sub: 'Total USD', color: '#a78bfa' },
-              { label: 'Tokens Held', value: portfolio.length.toString(), sub: 'Unique assets', color: '#38bdf8' },
+              { label: 'Portfolio Value', value: formatUSD(displayTotal), sub: 'Total USD', color: '#a78bfa' },
+              { label: 'Tokens Held', value: displayPortfolio.length.toString(), sub: 'Unique assets', color: '#38bdf8' },
               { label: 'Wallet', value: publicKey?.toString().slice(0, 8) + '...', sub: 'Via Solflare', color: '#34d399' },
               { label: 'Network', value: 'Mainnet', sub: 'Solana • Live', color: '#fb923c' },
             ].map((s) => (
@@ -228,6 +243,31 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+
+          {!demoMode && displayPortfolio.length === 0 && (
+            <div className="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl"
+              style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.2)' }}>
+              <span className="text-sm text-gray-300">Your wallet appears empty.</span>
+              <button onClick={() => setDemoMode(true)}
+                className="px-3 py-1 rounded-lg text-xs font-medium text-white"
+                style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}>
+                Try Demo Mode
+              </button>
+            </div>
+          )}
+          {demoMode && (
+            <div className="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl"
+              style={{ background: 'rgba(251,146,60,0.1)', border: '1px solid rgba(251,146,60,0.2)' }}>
+              <span className="text-sm text-orange-300">🎭 Demo Mode — showing sample portfolio data</span>
+              <button onClick={() => setDemoMode(false)}
+                className="px-3 py-1 rounded-lg text-xs font-medium text-orange-300"
+                style={{ background: 'rgba(251,146,60,0.2)' }}>
+                Exit Demo
+              </button>
+            </div>
+          )}
+
 
           {/* Tabs */}
           <div className="flex gap-1 mb-6 p-1 rounded-xl w-fit"
@@ -435,6 +475,8 @@ export default function Home() {
 
           {/* Alerts Tab */}
           {activeTab === 'alerts' && <PriceAlerts />}
+
+          {activeTab === 'search' && <TokenSearch />}
 
           {activeTab === 'swap' && <SwapWidget />}
         </div>
