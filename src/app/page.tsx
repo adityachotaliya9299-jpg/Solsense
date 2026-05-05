@@ -8,6 +8,7 @@ import { Wallet, TrendingUp, Activity, RefreshCw, ExternalLink, Zap, Shield, Bar
 import PriceChart from '@/components/PriceChart';
 import WhaleTracker from '@/components/WhaleTracker';
 import PriceAlerts from '@/components/PriceAlerts';
+import SwapWidget from '@/components/SwapWidget';
 
 interface Token {
   address: string;
@@ -44,7 +45,7 @@ export default function Home() {
   const [totalValue, setTotalValue] = useState(0);
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState<'portfolio' | 'market' | 'activity' | 'whales' | 'alerts'>('portfolio');
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'market' | 'activity' | 'whales' | 'alerts' | 'swap'>('portfolio');
   const [selectedToken, setSelectedToken] = useState<Token | null>(null);
 
   useEffect(() => { setMounted(true); }, []);
@@ -89,13 +90,14 @@ export default function Home() {
 
   if (!mounted) return null;
 
-  const tabs = [
-    { id: 'portfolio', label: 'Portfolio', icon: <Wallet size={13} /> },
-    { id: 'market', label: 'Market', icon: <TrendingUp size={13} /> },
-    { id: 'activity', label: 'Activity', icon: <Activity size={13} /> },
-    { id: 'whales', label: '🐋 Whales', icon: null },
-    { id: 'alerts', label: '🔔 Alerts', icon: null },
-  ] as const;
+ const tabs = [
+  { id: 'portfolio', label: 'Portfolio', icon: <Wallet size={13} /> },
+  { id: 'market', label: 'Market', icon: <TrendingUp size={13} /> },
+  { id: 'activity', label: 'Activity', icon: <Activity size={13} /> },
+  { id: 'whales', label: '🐋 Whales', icon: null },
+  { id: 'alerts', label: '🔔 Alerts', icon: null },
+  { id: 'swap', label: '⚡ Swap', icon: null },
+] as const;
 
   return (
     <main className="min-h-screen text-white" style={{ background: 'linear-gradient(135deg, #0a0a0f 0%, #0d0a1a 50%, #0a0f1a 100%)' }}>
@@ -433,6 +435,9 @@ export default function Home() {
 
           {/* Alerts Tab */}
           {activeTab === 'alerts' && <PriceAlerts />}
+
+          {/* Swap Tab */}
+          {activeTab === 'swap' && <SwapWidget />}
         </div>
       )}
 
