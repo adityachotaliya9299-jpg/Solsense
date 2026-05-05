@@ -7,8 +7,8 @@ import { getWalletPortfolio, getTopTokens, getWalletTransactions } from '@/lib/b
 import { Wallet, TrendingUp, Activity, RefreshCw, ExternalLink, Zap, Shield, BarChart3, Bell } from 'lucide-react';
 import PriceChart from '@/components/PriceChart';
 import WhaleTracker from '@/components/WhaleTracker';
-import PriceAlerts from '@/components/PriceAlerts';
 import SwapWidget from '@/components/SwapWidget';
+import PriceAlerts from '@/components/PriceAlerts';
 
 interface Token {
   address: string;
@@ -90,14 +90,14 @@ export default function Home() {
 
   if (!mounted) return null;
 
- const tabs = [
-  { id: 'portfolio', label: 'Portfolio', icon: <Wallet size={13} /> },
-  { id: 'market', label: 'Market', icon: <TrendingUp size={13} /> },
-  { id: 'activity', label: 'Activity', icon: <Activity size={13} /> },
-  { id: 'whales', label: '🐋 Whales', icon: null },
-  { id: 'alerts', label: '🔔 Alerts', icon: null },
-  { id: 'swap', label: '⚡ Swap', icon: null },
-] as const;
+  const tabs = [
+    { id: 'portfolio', label: 'Portfolio', icon: <Wallet size={13} /> },
+    { id: 'market', label: 'Market', icon: <TrendingUp size={13} /> },
+    { id: 'activity', label: 'Activity', icon: <Activity size={13} /> },
+    { id: 'whales', label: '🐋 Whales', icon: null },
+    { id: 'alerts', label: '🔔 Alerts', icon: null },
+    { id: 'swap', label: '⚡ Swap', icon: null },
+  ] as const;
 
   return (
     <main className="min-h-screen text-white" style={{ background: 'linear-gradient(135deg, #0a0a0f 0%, #0d0a1a 50%, #0a0f1a 100%)' }}>
@@ -111,7 +111,7 @@ export default function Home() {
       </div>
 
       {/* Navbar */}
-      <nav className="relative z-10 border-b px-4 md:px-8 py-4 flex items-center justify-between backdrop-blur-md"
+      <nav className="relative z-10 border-b px-8 py-4 flex items-center justify-between backdrop-blur-md"
         style={{ borderColor: 'rgba(255,255,255,0.08)', background: 'rgba(10,10,20,0.7)' }}>
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center"
@@ -196,8 +196,8 @@ export default function Home() {
                   style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <div className="flex items-center gap-2 mb-2">
                     {token.logoURI
-                      ? <img src={token.logoURI} className="token-logo-sm" alt={token.symbol} />
-                      : <div className="token-logo-sm bg-purple-800 flex items-center justify-center text-xs">{token.symbol?.slice(0, 2)}</div>
+                      ? <img src={token.logoURI} className="w-6 h-6 rounded-full" alt={token.symbol} />
+                      : <div className="w-6 h-6 rounded-full bg-purple-800 flex items-center justify-center text-xs">{token.symbol?.slice(0, 2)}</div>
                     }
                     <span className="text-xs font-semibold">{token.symbol}</span>
                   </div>
@@ -286,7 +286,7 @@ export default function Home() {
                       onClick={() => setSelectedToken(token)}>
                       <div className="flex items-center gap-3 px-5 py-4">
                         {token.logoURI
-                          ? <img src={token.logoURI} className="token-logo" alt={token.symbol} />
+                          ? <img src={token.logoURI} className="w-8 h-8 rounded-full" alt={token.symbol} />
                           : <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
                               style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}>
                               {token.symbol?.slice(0, 2)}
@@ -332,7 +332,7 @@ export default function Home() {
                       <div className="flex items-center gap-3">
                         <span className="text-xs text-gray-600 w-4">{i + 1}</span>
                         {token.logoURI
-                          ? <img src={token.logoURI} className="token-logo" alt={token.symbol} />
+                          ? <img src={token.logoURI} className="w-8 h-8 rounded-full" alt={token.symbol} />
                           : <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-xs">{token.symbol?.slice(0, 2)}</div>
                         }
                         <div>
@@ -360,7 +360,7 @@ export default function Home() {
                     {[...topTokens].sort((a, b) => (b.v24hChangePercent || 0) - (a.v24hChangePercent || 0)).slice(0, 5).map((token) => (
                       <div key={token.address} className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5">
                         <div className="flex items-center gap-2">
-                          {token.logoURI ? <img src={token.logoURI} className="token-logo-sm" alt="" /> : <div className="token-logo-sm bg-gray-800" />}
+                          {token.logoURI ? <img src={token.logoURI} className="w-6 h-6 rounded-full" alt="" /> : <div className="w-6 h-6 rounded-full bg-gray-800" />}
                           <span className="text-sm font-medium">{token.symbol}</span>
                         </div>
                         <span className="text-green-400 text-sm font-bold">+{(token.v24hChangePercent || 0).toFixed(1)}%</span>
@@ -377,7 +377,7 @@ export default function Home() {
                     {[...topTokens].sort((a, b) => (a.v24hChangePercent || 0) - (b.v24hChangePercent || 0)).slice(0, 5).map((token) => (
                       <div key={token.address} className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5">
                         <div className="flex items-center gap-2">
-                          {token.logoURI ? <img src={token.logoURI} className="token-logo-sm" alt="" /> : <div className="token-logo-sm bg-gray-800" />}
+                          {token.logoURI ? <img src={token.logoURI} className="w-6 h-6 rounded-full" alt="" /> : <div className="w-6 h-6 rounded-full bg-gray-800" />}
                           <span className="text-sm font-medium">{token.symbol}</span>
                         </div>
                         <span className="text-red-400 text-sm font-bold">{(token.v24hChangePercent || 0).toFixed(1)}%</span>
@@ -436,7 +436,6 @@ export default function Home() {
           {/* Alerts Tab */}
           {activeTab === 'alerts' && <PriceAlerts />}
 
-          {/* Swap Tab */}
           {activeTab === 'swap' && <SwapWidget />}
         </div>
       )}
