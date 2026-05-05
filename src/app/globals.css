@@ -7,47 +7,16 @@
   scrollbar-color: #7c3aed33 transparent;
 }
 
-*::-webkit-scrollbar {
-  width: 4px;
-}
-
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-  background: #7c3aed33;
-  border-radius: 4px;
-}
-
-/* Mobile responsive overrides */
-@media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .hide-mobile {
-    display: none !important;
-  }
-
-  .tab-scroll {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
+*::-webkit-scrollbar { width: 4px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: #7c3aed33; border-radius: 4px; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.fade-in {
-  animation: fadeIn 0.3s ease forwards;
-}
+.fade-in { animation: fadeIn 0.3s ease forwards; }
 
 @keyframes shimmer {
   0% { background-position: -200% 0; }
