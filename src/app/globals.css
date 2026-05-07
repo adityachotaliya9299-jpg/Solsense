@@ -9,14 +9,48 @@
 
 *::-webkit-scrollbar { width: 4px; }
 *::-webkit-scrollbar-track { background: transparent; }
-*::-webkit-scrollbar-thumb { background: #7c3aed33; border-radius: 4px; }
+*::-webkit-scrollbar-thumb { background: #7c3aed44; border-radius: 4px; }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Glassmorphism card */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
-.fade-in { animation: fadeIn 0.3s ease forwards; }
 
+.glass-strong {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #fff 0%, #a78bfa 50%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-purple {
+  background: linear-gradient(135deg, #a78bfa, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow effects */
+.glow-purple {
+  box-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
+}
+
+.glow-blue {
+  box-shadow: 0 0 30px rgba(37, 99, 235, 0.3);
+}
+
+/* Skeleton */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -34,38 +68,71 @@
   border-radius: 8px;
 }
 
-.skeleton-text {
-  height: 14px;
-  margin-bottom: 8px;
-  border-radius: 4px;
+.skeleton-circle { border-radius: 50% !important; }
+
+/* Orb animations */
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
 }
 
-.skeleton-circle {
-  border-radius: 50% !important;
+.orb-animate {
+  animation: orbFloat 8s ease-in-out infinite;
 }
 
-/* Fix landing page cards on small screens */
+.orb-animate-slow {
+  animation: orbFloat 12s ease-in-out infinite reverse;
+}
+
+/* Tab hover */
+.tab-btn {
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: white !important;
+  background: rgba(255,255,255,0.08) !important;
+}
+
+/* Card hover */
+.card-hover {
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(124, 58, 237, 0.3) !important;
+}
+
+/* Pulse dot */
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+
+.pulse-dot {
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+/* Number counter animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.count-up {
+  animation: countUp 0.5s ease forwards;
+}
+
+/* Responsive */
 @media (max-width: 900px) {
-  .feature-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-  .market-preview-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-  }
+  .feature-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .market-preview-grid { grid-template-columns: repeat(3, 1fr) !important; }
 }
 
 @media (max-width: 600px) {
-  .feature-grid {
-    grid-template-columns: 1fr !important;
-  }
-  .market-preview-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-
-img {
-  display: block;
+  .feature-grid { grid-template-columns: 1fr !important; }
+  .market-preview-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
