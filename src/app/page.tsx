@@ -365,13 +365,30 @@ const displayTransactions = demoMode ? DEMO_TRANSACTIONS : transactions;
                   <RefreshCw size={12} /> Refresh
                 </button>
               </div>
+
+
+
               {loading ? (
-                <div className="flex items-center justify-center py-16">
-                  <div className="text-center">
-                    <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-                    <p className="text-gray-400 text-sm">Fetching from Birdeye...</p>
+              <div className="p-5 space-y-3">
+                {[1,2,3,4,5].map((i) => (
+                  <div key={i} className="grid grid-cols-5 gap-4 items-center py-2">
+                    <div className="flex items-center gap-3">
+                      <div className="skeleton skeleton-circle" style={{ width: 32, height: 32 }} />
+                      <div className="space-y-1 flex-1">
+                        <div className="skeleton skeleton-text w-16" />
+                        <div className="skeleton skeleton-text w-12" style={{ height: 10 }} />
+                      </div>
+                    </div>
+                    <div className="skeleton skeleton-text w-20" />
+                    <div className="skeleton skeleton-text w-16" />
+                    <div className="skeleton skeleton-text w-12" />
+                    <div className="skeleton skeleton-text w-20" />
                   </div>
-                </div>
+                ))}
+              </div>
+
+
+
               ) : displayPortfolio.length === 0 ? (
                 <div className="text-center py-16 text-gray-500">
                   <Wallet size={40} className="mx-auto mb-3 opacity-30" />
