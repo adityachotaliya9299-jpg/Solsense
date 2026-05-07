@@ -48,6 +48,11 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<'portfolio' | 'market' | 'activity' | 'whales' | 'alerts' | 'swap' | 'search'>('portfolio');
   const [selectedToken, setSelectedToken] = useState<Token | null>(null);
+  const [walletSearch, setWalletSearch] = useState('');
+  const [searchedWallet, setSearchedWallet] = useState('');
+  const [searchedPortfolio, setSearchedPortfolio] = useState<Token[]>([]);
+  const [searchedTotal, setSearchedTotal] = useState(0);
+  const [searchLoading, setSearchLoading] = useState(false);
 
 
   const DEMO_PORTFOLIO = [
@@ -64,9 +69,12 @@ export default function Home() {
 ];
 
   const [demoMode, setDemoMode] = useState(false);
-  const displayPortfolio = demoMode ? DEMO_PORTFOLIO : portfolio;
-  const displayTotal = demoMode ? DEMO_PORTFOLIO.reduce((s, t) => s + t.valueUsd, 0) : totalValue;
+  const displayPortfolio = searchedWallet ? searchedPortfolio : demoMode ? DEMO_PORTFOLIO : portfolio;
+const displayTotal = searchedWallet ? searchedTotal : demoMode ? DEMO_PORTFOLIO.reduce((s, t) => s + t.valueUsd, 0) : totalValue;
 const displayTransactions = demoMode ? DEMO_TRANSACTIONS : transactions;
+
+
+
 
   useEffect(() => { setMounted(true); }, []);
   useEffect(() => { fetchTopTokens(); }, []);
@@ -99,6 +107,20 @@ const displayTransactions = demoMode ? DEMO_TRANSACTIONS : transactions;
     const data = await getWalletTransactions(publicKey.toString());
     if (data?.data?.solana) setTransactions(data.data.solana);
   }
+
+  async function handleWalletSearch() {
+  if (!walletSearch.trim()) return;
+  setSearchLoading(true);
+  setSearchedWallet(walletSearch.trim());
+  const data = await getWalletPortfolio(walletSearch.trim());
+  if (data?.data?.items) {
+    const tokens = data.data.items.filter((t: Token) => t.valueUsd > 0);
+    setSearchedPortfolio(tokens);
+    setSearchedTotal(tokens.reduce((sum: number, t: Token) => sum + t.valueUsd, 0));
+    setActiveTab('portfolio');
+  }
+  setSearchLoading(false);
+}
 
   const formatUSD = (val: number) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
@@ -186,7 +208,7 @@ const displayTransactions = demoMode ? DEMO_TRANSACTIONS : transactions;
             }} />
           </div>
 
-          <div className="grid grid-cols-4 gap-5 mb-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
             {[
               { icon: <BarChart3 size={22} />, color: '#7c3aed', title: 'Portfolio Analytics', desc: 'Real-time token values & 24h PnL' },
               { icon: <TrendingUp size={22} />, color: '#0891b2', title: 'Market Intelligence', desc: 'Top movers, gainers & losers' },
@@ -211,7 +233,7 @@ const displayTransactions = demoMode ? DEMO_TRANSACTIONS : transactions;
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
               <span className="text-sm font-semibold text-gray-300">Live Market Preview</span>
             </div>
-            <div className="grid grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {topTokens.slice(0, 10).map((token) => (
                 <div key={token.address} className="rounded-xl p-3"
                   style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
@@ -251,6 +273,30 @@ const displayTransactions = demoMode ? DEMO_TRANSACTIONS : transactions;
           </div>
 
 
+          {/* Wallet Address Search */}
+          <div className="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl"
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <span className="text-sm text-gray-400 whitespace-nowrap">🔍 Analyze wallet:</span>
+            <input
+              type="text"
+              value={walletSearch}
+              onChange={(e) => setWalletSearch(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleWalletSearch()}
+              placeholder="Enter any Solana wallet address..."
+              className="flex-1 bg-transparent text-sm text-white outline-none placeholder-gray-600"
+            />
+            {walletSearch && (
+              <button onClick={() => { setWalletSearch(''); setSearchedWallet(''); }}
+                className="text-gray-500 hover:text-white text-xs">✕</button>
+            )}
+            <button onClick={handleWalletSearch}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium text-white whitespace-nowrap"
+              style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}>
+              Analyze
+            </button>
+          </div>
+
+
           {!demoMode && displayPortfolio.length === 0 && (
             <div className="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl"
               style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.2)' }}>
@@ -274,6 +320,20 @@ const displayTransactions = demoMode ? DEMO_TRANSACTIONS : transactions;
             </div>
           )}
 
+          {searchedWallet && (
+          <div className="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl"
+            style={{ background: 'rgba(37,99,235,0.1)', border: '1px solid rgba(37,99,235,0.2)' }}>
+            {searchLoading
+              ? <span className="text-sm text-blue-300">🔍 Analyzing wallet...</span>
+              : <span className="text-sm text-blue-300">🔍 Showing wallet: {searchedWallet.slice(0,20)}...</span>
+            }
+            <button onClick={() => { setSearchedWallet(''); setWalletSearch(''); setSearchedPortfolio([]); }}
+              className="px-3 py-1 rounded-lg text-xs text-blue-300"
+              style={{ background: 'rgba(37,99,235,0.2)' }}>
+              Clear
+            </button>
+          </div>
+        )}
 
           {/* Tabs */}
           <div className="flex gap-1 mb-6 p-1 rounded-xl w-fit"
