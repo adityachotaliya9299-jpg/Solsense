@@ -32,9 +32,21 @@ export default function PriceAlerts() {
   const [triggered, setTriggered] = useState<Alert[]>([]);
 
   useEffect(() => {
+  try {
     const saved = localStorage.getItem('solsense_alerts');
-    if (saved) setAlerts(JSON.parse(saved));
-  }, []);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Reset triggered alerts older than 24h so they can re-trigger
+      const reset = parsed.map((a: Alert) => ({
+        ...a,
+        triggered: a.triggered && (Date.now() - a.createdAt < 86400000) ? true : false
+      }));
+      setAlerts(reset);
+    }
+  } catch {
+    localStorage.removeItem('solsense_alerts');
+  }
+}, []);
 
   useEffect(() => {
     if (alerts.length === 0) return;
@@ -216,6 +228,33 @@ export default function PriceAlerts() {
           </div>
         )}
       </div>
+      {alerts.length > 0 && (
+        <div className="px-5 pb-4 flex gap-2">
+          <button
+            onClick={() => {
+              const data = JSON.stringify(alerts, null, 2);
+              const blob = new Blob([data], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'solsense_alerts.json';
+              a.click();
+            }}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:text-white"
+            style={{ background: 'rgba(255,255,255,0.06)' }}>
+            📥 Export Alerts
+          </button>
+          <button
+            onClick={() => {
+              setAlerts([]);
+              localStorage.removeItem('solsense_alerts');
+            }}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-red-400 hover:text-red-300"
+            style={{ background: 'rgba(239,68,68,0.08)' }}>
+            🗑️ Clear All
+          </button>
+        </div>
+      )}
     </div>
   );
 }
