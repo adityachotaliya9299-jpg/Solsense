@@ -651,17 +651,17 @@ interface TopToken { address: string; symbol: string; name: string; logoURI?: st
 
 // --- Global Demo Data ---
 const DEMO_PORTFOLIO: Token[] = [
-  { address: '1', symbol: 'SOL', name: 'Solana', logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png', balance: 142.5, valueUsd: 20662.5, priceUsd: 145.0, priceChange24h: 5.2 },
-  { address: '2', symbol: 'USDC', name: 'USD Coin', logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png', balance: 4500, valueUsd: 4500, priceUsd: 1.0, priceChange24h: 0.01 },
-  { address: '3', symbol: 'JUP', name: 'Jupiter', logoURI: 'https://static.jup.ag/jup/icon.png', balance: 15000, valueUsd: 16500, priceUsd: 1.10, priceChange24h: 12.4 },
+  { address: 'So11111111111111111111111111111111111111112', symbol: 'SOL', name: 'Solana', logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png', balance: 12.5, valueUsd: 1812.5, priceUsd: 145.0, priceChange24h: 5.4 },
+  { address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', symbol: 'USDC', name: 'USD Coin', logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png', balance: 4500, valueUsd: 4500, priceUsd: 1.0, priceChange24h: 0.01 },
+  { address: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', symbol: 'JUP', name: 'Jupiter', logoURI: 'https://static.jup.ag/jup/icon.png', balance: 15000, valueUsd: 16500, priceUsd: 1.10, priceChange24h: 12.4 },
 ];
 
 const DEMO_TOP_TOKENS: TopToken[] = [
-  { address: 't1', symbol: 'SOL', name: 'Solana', logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png', price: 145.2, v24hChangePercent: 5.4, v24hUSD: 1500000000 },
-  { address: 't2', symbol: 'JUP', name: 'Jupiter', logoURI: 'https://static.jup.ag/jup/icon.png', price: 1.12, v24hChangePercent: 12.5, v24hUSD: 450000000 },
-  { address: 't3', symbol: 'WIF', name: 'Dogwifhat', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/28752.png', price: 2.45, v24hChangePercent: -4.2, v24hUSD: 300000000 },
-  { address: 't4', symbol: 'BONK', name: 'Bonk', logoURI: 'https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I', price: 0.000024, v24hChangePercent: 8.1, v24hUSD: 150000000 },
-  { address: 't5', symbol: 'PYTH', name: 'Pyth Network', logoURI: 'https://s2.coinmarketcap.com/static/img/coins/64x64/28177.png', price: 0.45, v24hChangePercent: -1.2, v24hUSD: 80000000 },
+  { address: 'So11111111111111111111111111111111111111112', symbol: 'SOL', name: 'Solana', logoURI: 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png', price: 145.2, v24hChangePercent: 5.4, v24hUSD: 1500000000 },
+  { address: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN', symbol: 'JUP', name: 'Jupiter', logoURI: 'https://static.jup.ag/jup/icon.png', price: 1.12, v24hChangePercent: 12.5, v24hUSD: 450000000 },
+  { address: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm', symbol: 'WIF', name: 'Dogwifhat', logoURI: 'https://bafkreibk3covs5ltyqxa272uodhculbgn2dnd2n33udnpd7ypaswl5bhm.ipfs.nftstorage.link', price: 2.45, v24hChangePercent: -4.2, v24hUSD: 300000000 },
+  { address: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263', symbol: 'BONK', name: 'Bonk', logoURI: 'https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I', price: 0.000024, v24hChangePercent: 8.1, v24hUSD: 150000000 },
+  { address: 'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3', symbol: 'PYTH', name: 'Pyth Network', logoURI: 'https://pyth.network/token.svg', price: 0.45, v24hChangePercent: -1.2, v24hUSD: 80000000 },
 ];
 
 const DEMO_TRANSACTIONS: Transaction[] = [
@@ -730,9 +730,9 @@ export default function Home() {
   }
 
   // Active Display Logic (Switches between Live Data and Demo Data)
- const displayPortfolio = searchedWallet ? searchedPortfolio : (demoMode || portfolio.length === 0) ? DEMO_PORTFOLIO : portfolio;
-const displayTotal = searchedWallet ? searchedTotal : (demoMode || portfolio.length === 0) ? DEMO_PORTFOLIO.reduce((s,t) => s+t.valueUsd,0) : totalValue;
-const displayTransactions = (demoMode || transactions.length === 0) ? DEMO_TRANSACTIONS : transactions;
+const displayPortfolio = searchedWallet ? searchedPortfolio : demoMode ? DEMO_PORTFOLIO : portfolio;
+const displayTotal = searchedWallet ? searchedTotal : demoMode ? DEMO_PORTFOLIO.reduce((s,t) => s+t.valueUsd,0) : totalValue;
+const displayTransactions = demoMode ? DEMO_TRANSACTIONS : transactions.length > 0 ? transactions : [];
 const displayTopTokens = topTokens.length > 0 ? topTokens : DEMO_TOP_TOKENS;
 
   const formatUSD = (val: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
@@ -775,6 +775,17 @@ const displayTopTokens = topTokens.length > 0 ? topTokens : DEMO_TOP_TOKENS;
               <span className="text-green-400 font-medium">Mainnet</span>
             </div>
           )}
+
+          <button
+  onClick={() => setDemoMode(!demoMode)}
+  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+  style={{ 
+    background: demoMode ? 'rgba(251,146,60,0.15)' : 'rgba(255,255,255,0.06)',
+    border: demoMode ? '1px solid rgba(251,146,60,0.3)' : '1px solid rgba(255,255,255,0.1)',
+    color: demoMode ? '#fb923c' : '#6b7280'
+  }}>
+  {demoMode ? '🎭 Demo' : '📊 Live'}
+</button>
           <WalletMultiButton className="!bg-white/10 hover:!bg-white/20 !transition-all !duration-500 !rounded-xl !py-2 !px-6 border border-white/10" />
         </div>
       </motion.nav>
@@ -860,11 +871,14 @@ const displayTopTokens = topTokens.length > 0 ? topTokens : DEMO_TOP_TOKENS;
 
           <AnimatePresence>
             {demoMode && (
-              <motion.div initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:-10 }} className="mb-6 flex items-center gap-3 px-5 py-4 rounded-2xl border border-orange-500/20 bg-orange-500/10 backdrop-blur-md">
-                <span className="text-sm text-orange-300">🎭 Demo Mode Active — API limit reached. Showing sample data.</span>
-                <button onClick={() => setDemoMode(false)} className="ml-auto px-4 py-1.5 rounded-lg text-xs font-medium bg-orange-500/20 text-orange-200 hover:bg-orange-500/30">Try Live Data</button>
-              </motion.div>
-            )}
+  <motion.div initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:-10 }} className="mb-6 flex items-center gap-3 px-5 py-4 rounded-2xl border border-orange-500/20 bg-orange-500/10 backdrop-blur-md">
+    <span className="text-sm text-orange-300">🎭 Showing sample data — connect a funded wallet to see real portfolio</span>
+    <button onClick={() => setDemoMode(false)}
+      className="ml-auto px-4 py-1.5 rounded-lg text-xs font-medium bg-orange-500/20 text-orange-200 hover:bg-orange-500/30">
+      Refresh Live Data
+    </button>
+  </motion.div>
+)}
           </AnimatePresence>
 
           <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.3 }} className="flex overflow-x-auto gap-2 mb-8 p-1.5 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl w-fit">
@@ -879,30 +893,64 @@ const displayTopTokens = topTokens.length > 0 ? topTokens : DEMO_TOP_TOKENS;
             <motion.div key={activeTab} initial={{ opacity:0, y:15 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:-10 }} transition={{ duration:0.3 }}>
               
               {activeTab === 'portfolio' && (
-                <div className="rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-xl overflow-hidden">
-                  <div className="flex items-center justify-between p-6 border-b border-white/5">
-                    <h2 className="text-lg font-semibold flex items-center gap-2"><Wallet className="text-purple-400"/> Your Assets</h2>
+  <div className="rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-xl overflow-hidden">
+    <div className="flex items-center justify-between p-6 border-b border-white/5">
+      <h2 className="text-lg font-semibold flex items-center gap-2"><Wallet className="text-purple-400"/> Your Assets</h2>
+      <div className="flex items-center gap-2">
+        {!demoMode && (
+          <button onClick={() => setDemoMode(true)}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium"
+            style={{ background:'rgba(251,146,60,0.15)', color:'#fb923c', border:'1px solid rgba(251,146,60,0.3)' }}>
+            🎭 Try Demo
+          </button>
+        )}
+        {demoMode && (
+          <button onClick={() => setDemoMode(false)}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium"
+            style={{ background:'rgba(124,58,237,0.15)', color:'#a78bfa', border:'1px solid rgba(124,58,237,0.3)' }}>
+            📊 Exit Demo
+          </button>
+        )}
+      </div>
+    </div>
+    {displayPortfolio.length === 0 ? (
+      <div className="text-center py-16 text-white/30">
+        <Wallet size={48} className="mx-auto mb-4 opacity-20"/>
+        <p className="text-lg mb-2">No tokens found in this wallet</p>
+        <p className="text-sm mb-6">Connect a funded wallet or try demo mode</p>
+        <button onClick={() => setDemoMode(true)}
+          className="px-6 py-3 rounded-xl text-sm font-semibold text-white"
+          style={{ background:'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
+          🎭 Try Demo Mode
+        </button>
+      </div>
+    ) : (
+      <div className="divide-y divide-white/5">
+        {displayPortfolio.map((token) => (
+                <div key={token.address} onClick={() => setSelectedToken(token)} className="flex items-center justify-between p-6 hover:bg-white/[0.04] transition-colors cursor-pointer group">
+                  <div className="flex items-center gap-4">
+                    {token.logoURI
+                      ? <img src={token.logoURI} alt="" className="w-12 h-12 rounded-full border border-white/10" style={{objectFit:'cover'}}/>
+                      : <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-blue-500"/>
+                    }
+                    <div>
+                      <p className="font-bold text-lg group-hover:text-purple-300 transition-colors">{token.symbol}</p>
+                      <p className="text-white/40 text-sm">{token.name}</p>
+                    </div>
                   </div>
-                  <div className="divide-y divide-white/5">
-                    {displayPortfolio.map((token) => (
-                      <div key={token.address} onClick={() => setSelectedToken(token)} className="flex items-center justify-between p-6 hover:bg-white/[0.04] transition-colors cursor-pointer group">
-                        <div className="flex items-center gap-4">
-                          {token.logoURI ? <img src={token.logoURI} alt="" className="w-12 h-12 rounded-full border border-white/10" /> : <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-blue-500" />}
-                          <div>
-                            <p className="font-bold text-lg group-hover:text-purple-300 transition-colors">{token.symbol}</p>
-                            <p className="text-white/40 text-sm">{token.name}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold text-lg">{formatUSD(token.valueUsd)}</p>
-                          <p className="text-white/40 text-sm">{token.balance.toFixed(4)} {token.symbol}</p>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="text-right">
+                    <p className="font-bold text-lg">{formatUSD(token.valueUsd)}</p>
+                    <p className="text-white/40 text-sm">{token.balance.toFixed(4)} {token.symbol}</p>
+                    <p className={`text-xs font-semibold mt-0.5 ${(token.priceChange24h||0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                      {(token.priceChange24h||0) >= 0 ? '▲' : '▼'} {Math.abs(token.priceChange24h||0).toFixed(2)}%
+                    </p>
                   </div>
                 </div>
-              )}
-
+              ))}
+            </div>
+          )}
+        </div>
+      )}
               {activeTab === 'market' && (
   <div className="space-y-6">
     {/* Summary stats */}
@@ -998,21 +1046,53 @@ const displayTopTokens = topTokens.length > 0 ? topTokens : DEMO_TOP_TOKENS;
 )}
 
               {activeTab === 'activity' && (
-                <div className="rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-xl overflow-hidden">
-                  <div className="p-6 border-b border-white/5"><h2 className="text-lg font-semibold flex items-center gap-2"><Activity className="text-blue-400"/> Transactions</h2></div>
-                  <div className="divide-y divide-white/5">
-                    {displayTransactions.map((tx, i) => (
-                      <div key={i} className="flex items-center justify-between p-6 hover:bg-white/[0.02]">
-                        <div>
-                          <p className="font-mono text-sm text-white/70">{tx.txHash}</p>
-                          <p className="text-xs text-white/40 mt-1">{formatDate(tx.blockTime)}</p>
-                        </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${tx.status === 'Success' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>{tx.status}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+  <div className="rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-xl overflow-hidden">
+    <div className="flex items-center justify-between p-6 border-b border-white/5">
+      <h2 className="text-lg font-semibold flex items-center gap-2">
+        <Activity size={18} className="text-blue-400"/> Transactions
+      </h2>
+      {!demoMode && (
+        <button onClick={() => setDemoMode(true)}
+          className="px-3 py-1.5 rounded-lg text-xs font-medium"
+          style={{ background:'rgba(251,146,60,0.15)', color:'#fb923c', border:'1px solid rgba(251,146,60,0.3)' }}>
+          🎭 Try Demo
+        </button>
+      )}
+    </div>
+    {displayTransactions.length === 0 ? (
+      <div className="text-center py-16 text-white/30">
+        <Activity size={48} className="mx-auto mb-4 opacity-20"/>
+        <p className="text-lg mb-2">No transactions found</p>
+        <p className="text-sm mb-6">This wallet has no recent activity</p>
+        <button onClick={() => setDemoMode(true)}
+          className="px-6 py-3 rounded-xl text-sm font-semibold text-white"
+          style={{ background:'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
+          🎭 Try Demo Mode
+        </button>
+      </div>
+    ) : (
+      <div className="divide-y divide-white/5">
+        {displayTransactions.map((tx, i) => (
+          <div key={i} className="flex items-center justify-between p-6 hover:bg-white/[0.02]">
+            <div>
+              <p className="font-mono text-sm text-white/70">{tx.txHash?.slice(0,32)}...</p>
+              <p className="text-xs text-white/40 mt-1">{formatDate(tx.blockTime)}</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className={`px-3 py-1 rounded-full text-xs font-medium ${tx.status === 'Success' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                {tx.status}
+              </span>
+              <a href={`https://solscan.io/tx/${tx.txHash}`} target="_blank" rel="noopener noreferrer"
+                className="text-white/30 hover:text-white transition-colors">
+                <ExternalLink size={14}/>
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+)}
 
               {activeTab === 'whales' && (
                 <div>
@@ -1055,6 +1135,12 @@ const displayTopTokens = topTokens.length > 0 ? topTokens : DEMO_TOP_TOKENS;
           </AnimatePresence>
         </div>
       )}
+   {/* Price Chart Modal */}
+      <AnimatePresence>
+        {selectedToken && (
+          <PriceChart token={selectedToken} onClose={() => setSelectedToken(null)}/>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
