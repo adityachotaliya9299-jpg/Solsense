@@ -42,10 +42,10 @@ const DEMO_TRANSACTIONS: Transaction[] = [
 ];
 
 // --- Animations ---
-const fadeUp = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } } };
+const fadeUp = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0, transition: { duration: 0.8 } } };
 const stagger = { show: { transition: { staggerChildren: 0.1 } } };
 const typingContainer = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.04, delayChildren: 0.1 } } };
-const typingLetter = { hidden: { opacity: 0, y: 10, filter: "blur(4px)" }, show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } };
+const typingLetter = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0, transition: { duration: 0.8 } } };
 
 export default function Home() {
   const { connected, publicKey } = useWallet();
