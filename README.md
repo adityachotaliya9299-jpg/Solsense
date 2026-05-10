@@ -14,9 +14,13 @@
 
 [🚀 Live Demo](https://solsense-rho.vercel.app)
 
-</div>
+
 
 ---
+## Demo Video
+[Project Demo](https://www.loom.com/share/7c112f4ab77d4a48873a1f41b36a311e)
+</div>
+
 
 ## 🌟 What is SolSense?
 
