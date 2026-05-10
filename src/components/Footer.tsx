@@ -95,7 +95,7 @@ export default function Footer() {
 
         <div className="border-t pt-8 flex items-center justify-between"
           style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-          <p className="text-sm text-white/30">© 2025 SolSense. Built for Eitherway Frontier Hackathon.</p>
+          <p className="text-sm text-white/30">© 2026 SolSense. Built for Eitherway Frontier Hackathon.</p>
           <div className="flex items-center gap-2 text-sm text-white/30">
             <span>Built on</span>
             <span className="text-purple-400 font-semibold">Solana</span>
