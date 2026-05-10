@@ -1,6 +1,6 @@
 'use client';
 
-import { Zap, Twitter, Github, ExternalLink } from 'lucide-react';
+import { Zap, ExternalLink, Link } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -24,12 +24,12 @@ export default function Footer() {
               <a href="https://github.com/adityachotaliya9299-jpg/Solsense" target="_blank" rel="noopener noreferrer"
                 className="w-9 h-9 rounded-lg flex items-center justify-center text-white/40 hover:text-white transition-colors"
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <Github size={16} />
+                <ExternalLink size={16} />
               </a>
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
                 className="w-9 h-9 rounded-lg flex items-center justify-center text-white/40 hover:text-white transition-colors"
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <Twitter size={16} />
+               <Link size={16} />
               </a>
             </div>
           </div>
