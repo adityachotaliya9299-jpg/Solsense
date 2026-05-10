@@ -116,7 +116,10 @@ export default function PriceChart({ token, onClose }: Props) {
                   tickFormatter={(v) => `$${v < 0.01 ? v.toFixed(5) : v.toFixed(2)}`} />
                 <Tooltip
                   contentStyle={{ background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }}
-                  formatter={(value: number) => [`$${value < 0.01 ? value.toFixed(6) : value.toFixed(4)}`, 'Price']}
+                  formatter={(value) => {
+  const num = Number(value);
+  return [`$${num < 0.01 ? num.toFixed(6) : num.toFixed(4)}`, 'Price'];
+}}
                 />
                 <Area type="monotone" dataKey="price" stroke={isPositive ? '#22c55e' : '#ef4444'}
                   strokeWidth={2} fill="url(#priceGradient)" />
